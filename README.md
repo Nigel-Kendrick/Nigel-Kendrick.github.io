@@ -1,192 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nigel Kendrick - IAM Portfolio</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: #f4f4f4;
-        }
-        
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            background: #2c3e50;
-            color: white;
-            padding: 40px 0;
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        
-        header p {
-            font-size: 1.2em;
-            color: #ecf0f1;
-        }
-        
-        section {
-            background: white;
-            padding: 30px;
-            margin-bottom: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        h2 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            border-bottom: 3px solid #3498db;
-            padding-bottom: 10px;
-        }
-        
-        .lab-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .lab-card {
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 5px;
-            transition: transform 0.3s;
-        }
-        
-        .lab-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .lab-card h3 {
-            color: #3498db;
-            margin-bottom: 10px;
-        }
-        
-        .skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .skill-tag {
-            background: #3498db;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-        }
-        
-        .contact-links {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        
-        .contact-links a {
-            color: #3498db;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        
-        .contact-links a:hover {
-            color: #2980b9;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1>Nigel Kendrick</h1>
-        <p>Identity & Access Management | Systems Administration | M365 GCC High</p>
-    </header>
+# Identity & Access Management Portfolio
 
-    <div class="container">
-        <section>
-            <h2>About Me</h2>
-            <p>Systems Administrator with expertise in Microsoft 365 GCC High environments, actively transitioning to Identity and Access Management roles. Currently building hands-on experience with hybrid Active Directory, Azure Entra ID, and enterprise identity solutions through comprehensive lab work and real-world implementations.</p>
-            
-            <div class="skills">
-                <span class="skill-tag">Active Directory</span>
-                <span class="skill-tag">Azure Entra ID</span>
-                <span class="skill-tag">Hybrid Identity</span>
-                <span class="skill-tag">PowerShell</span>
-                <span class="skill-tag">Conditional Access</span>
-                <span class="skill-tag">Microsoft 365 GCC High</span>
-                <span class="skill-tag">CompTIA A+ & Security+</span>
-            </div>
-        </section>
+Personal portfolio website showcasing my hands-on experience with hybrid identity management, Active Directory, Azure Entra ID, and enterprise IAM solutions.
 
-        <section>
-            <h2>Lab Projects</h2>
-            <div class="lab-grid">
-                <div class="lab-card">
-                    <h3>Self-Service Password Reset (SSPR)</h3>
-                    <p>Implemented and configured Azure AD Self-Service Password Reset with password writeback to on-premises Active Directory in a hybrid environment.</p>
-                    <p><strong>Technologies:</strong> Azure Entra ID, AD Connect, PowerShell</p>
-                </div>
+**Live Site:** [https://Nigel-Kendrick.github.io](https://Nigel-Kendrick.github.io)
 
-                <div class="lab-card">
-                    <h3>Hybrid Azure AD Join</h3>
-                    <p>Configured seamless hybrid Azure AD join for domain-joined devices, implementing modern authentication and conditional access policies.</p>
-                    <p><strong>Technologies:</strong> Azure AD Connect, GPO, Intune</p>
-                </div>
+## About This Portfolio
 
-                <div class="lab-card">
-                    <h3>Multi-Site AD Replication</h3>
-                    <p>Designed and implemented Active Directory Sites and Services topology with multiple domain controllers and inter-site replication.</p>
-                    <p><strong>Technologies:</strong> Windows Server 2022, AD Sites & Services, DNS</p>
-                </div>
+This site documents my technical labs, projects, and learning journey as I transition into Identity and Access Management roles. Each lab demonstrates practical implementation of IAM concepts in production-ready environments.
 
-                <div class="lab-card">
-                    <h3>NigelTech.local Lab Environment</h3>
-                    <p>Built comprehensive hybrid identity lab with domain controllers, Windows 11 clients, and Azure integration for hands-on IAM practice.</p>
-                    <p><strong>Technologies:</strong> VirtualBox, Windows Server 2022, Azure</p>
-                </div>
-            </div>
-        </section>
+## Current Lab Projects
 
-        <section>
-            <h2>Certifications</h2>
-            <ul>
-                <li><strong>CompTIA A+</strong> - Hardware and Software Support</li>
-                <li><strong>CompTIA Security+</strong> - Security Fundamentals</li>
-                <li><strong>Bachelor of Science</strong> - Management Information Systems, Florida Atlantic University</li>
-            </ul>
-        </section>
+- **Self-Service Password Reset (SSPR)** - Azure AD SSPR with password writeback
+- **Hybrid Azure AD Join** - Seamless device authentication across on-prem and cloud
+- **Multi-Site AD Replication** - Enterprise Active Directory topology design
+- **NigelTech.local Environment** - Complete hybrid identity lab infrastructure
 
-        <section>
-            <h2>Current Focus</h2>
-            <p>Actively pursuing entry-level Identity and Access Management positions while completing a structured 10-week IAM training curriculum. Current learning areas include authentication protocols (Kerberos, NTLM), conditional access policies, privileged access management, and enterprise identity governance.</p>
-        </section>
+## Technologies
 
-        <section style="text-align: center;">
-            <h2>Connect With Me</h2>
-            <div class="contact-links">
-                <a href="https://linkedin.com/in/nigel-k-965229254" target="_blank">LinkedIn</a>
-                <a href="https://github.com/Nigel-Kendrick" target="_blank">GitHub</a>
-                <a href="mailto:NigelDKendrick@gmail.com">Email</a>
-            </div>
-        </section>
-    </div>
-</body>
-</html>
+- Active Directory & Azure Entra ID
+- PowerShell automation
+- Azure AD Connect (Entra Connect)
+- Conditional Access & MFA
+- Windows Server 2022
+
+## Certifications
+
+- CompTIA A+
+- CompTIA Security+
+- B.S. Management Information Systems - Florida Atlantic University
+
+## Contact
+
+- **LinkedIn:** [linkedin.com/in/nigel-k-965229254](https://linkedin.com/in/nigel-k-965229254)
+- **Email:** NigelDkendrick@gmail.com
+
+---
