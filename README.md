@@ -1,37 +1,31 @@
 # Identity & Access Management Portfolio
 
-Personal portfolio website showcasing my hands-on experience with hybrid identity management, Active Directory, Azure Entra ID, and enterprise IAM solutions.
+Personal portfolio showcasing hands-on experience with Azure Entra ID, Active Directory, and enterprise identity management solutions.
 
-**Live Site:** [https://Nigel-Kendrick.github.io](https://Nigel-Kendrick.github.io)
+**Live Site:** [https://nigel-kendrick.github.io](https://nigel-kendrick.github.io)
 
-## About This Portfolio
+## About
 
-This site documents my technical labs, projects, and learning journey as I transition into Identity and Access Management roles. Each lab demonstrates practical implementation of IAM concepts in production-ready environments.
+This portfolio documents my technical labs and IAM learning journey as I transition from Systems Administration into specialized Identity and Access Management roles. All labs are built in my NigelTech.local hybrid environment.
 
-## Current Lab Projects
+## Current Projects
 
-- **Self-Service Password Reset (SSPR)** - Azure AD SSPR with password writeback
-- **Hybrid Azure AD Join** - Seamless device authentication across on-prem and cloud
-- **Multi-Site AD Replication** - Enterprise Active Directory topology design
-- **NigelTech.local Environment** - Complete hybrid identity lab infrastructure
+- Self-Service Password Reset with password writeback
+- Hybrid Azure AD Join implementation
+- Multi-site Active Directory replication
+- Conditional Access policy design and testing
 
-## Technologies
+## Professional Background
 
-- Active Directory & Azure Entra ID
-- PowerShell automation
-- Azure AD Connect (Entra Connect)
-- Conditional Access & MFA
-- Windows Server 2022
-
-## Certifications
-
-- CompTIA A+
-- CompTIA Security+
-- B.S. Management Information Systems - Florida Atlantic University
+- **Current:** Systems Administrator at HumanIT Solutions
+- **Certifications:** CompTIA A+, CompTIA Security+
+- **Education:** B.S. Management Information Systems - Florida Atlantic University
 
 ## Contact
 
-- **LinkedIn:** [linkedin.com/in/nigel-k-965229254](https://linkedin.com/in/nigel-k-965229254)
-- **Email:** NigelDkendrick@gmail.com
+- **Email:** Nigeldkendrick@gmail.com
+- **LinkedIn:** [linkedin.com/in/nigel-kendrick1](https://linkedin.com/in/nigel-kendrick1)
 
 ---
+
+*Last updated: January 2025*
