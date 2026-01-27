@@ -107,84 +107,125 @@
             color: #3498db;
             text-decoration: none;
             font-weight: bold;
+            font-size: 1.1em;
         }
         
         .contact-links a:hover {
             color: #2980b9;
+        }
+
+        .experience-item {
+            margin-bottom: 15px;
+        }
+
+        .job-title {
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .company {
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .date {
+            color: #7f8c8d;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
     <header>
         <h1>Nigel Kendrick</h1>
-        <p>Identity & Access Management | Systems Administration | M365 GCC High</p>
+        <p>Identity & Access Management | Systems Administration | Microsoft 365 GCC High</p>
+        <p style="font-size: 0.9em; margin-top: 10px;">Nigeldkendrick@gmail.com</p>
     </header>
 
     <div class="container">
         <section>
             <h2>About Me</h2>
-            <p>Systems Administrator with expertise in Microsoft 365 GCC High environments, actively transitioning to Identity and Access Management roles. Currently building hands-on experience with hybrid Active Directory, Azure Entra ID, and enterprise identity solutions through comprehensive lab work and real-world implementations.</p>
+            <p>Systems Administrator with hands-on experience managing Azure Entra ID, Microsoft Intune, and hybrid identity solutions for enterprise environments. Currently building advanced IAM expertise through comprehensive lab work in Active Directory, Azure Entra ID, conditional access, and enterprise identity governance. Pursuing entry-level Identity and Access Management roles where I can apply my technical foundation and proven ability to manage complex identity infrastructures.</p>
             
             <div class="skills">
-                <span class="skill-tag">Active Directory</span>
                 <span class="skill-tag">Azure Entra ID</span>
+                <span class="skill-tag">Active Directory</span>
+                <span class="skill-tag">Microsoft Intune</span>
+                <span class="skill-tag">Conditional Access</span>
                 <span class="skill-tag">Hybrid Identity</span>
                 <span class="skill-tag">PowerShell</span>
-                <span class="skill-tag">Conditional Access</span>
+                <span class="skill-tag">Multi-Factor Authentication</span>
                 <span class="skill-tag">Microsoft 365 GCC High</span>
                 <span class="skill-tag">CompTIA A+ & Security+</span>
             </div>
         </section>
 
         <section>
-            <h2>Lab Projects</h2>
+            <h2>Professional Experience</h2>
+            
+            <div class="experience-item">
+                <div class="job-title">Systems Administrator – Microsoft 365 GCC High</div>
+                <div class="company">HumanIT Solutions</div>
+                <div class="date">August 2024 – Present</div>
+            </div>
+
+            <div class="experience-item">
+                <div class="job-title">Service Desk Analyst</div>
+                <div class="company">Dayton Children's Hospital</div>
+                <div class="date">October 2024 – March 2025</div>
+            </div>
+
+            <div class="experience-item">
+                <div class="job-title">PC Repair Technician</div>
+                <div class="company">Geek Squad – Best Buy</div>
+                <div class="date">October 2022 – March 2024</div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Lab Projects - NigelTech.local Environment</h2>
             <div class="lab-grid">
                 <div class="lab-card">
                     <h3>Self-Service Password Reset (SSPR)</h3>
-                    <p>Implemented and configured Azure AD Self-Service Password Reset with password writeback to on-premises Active Directory in a hybrid environment.</p>
+                    <p>Implemented Azure AD Self-Service Password Reset with password writeback to on-premises Active Directory. Configured authentication methods, tested user flows, and validated hybrid synchronization.</p>
                     <p><strong>Technologies:</strong> Azure Entra ID, AD Connect, PowerShell</p>
                 </div>
 
                 <div class="lab-card">
                     <h3>Hybrid Azure AD Join</h3>
-                    <p>Configured seamless hybrid Azure AD join for domain-joined devices, implementing modern authentication and conditional access policies.</p>
-                    <p><strong>Technologies:</strong> Azure AD Connect, GPO, Intune</p>
+                    <p>Configured seamless hybrid Azure AD join for domain-joined Windows 11 devices. Implemented device-based conditional access policies and validated modern authentication flows.</p>
+                    <p><strong>Technologies:</strong> Azure AD Connect, Group Policy, Intune</p>
                 </div>
 
                 <div class="lab-card">
                     <h3>Multi-Site AD Replication</h3>
-                    <p>Designed and implemented Active Directory Sites and Services topology with multiple domain controllers and inter-site replication.</p>
+                    <p>Designed Active Directory Sites and Services topology with multiple domain controllers across simulated geographic locations. Configured site links, replication schedules, and DNS integration.</p>
                     <p><strong>Technologies:</strong> Windows Server 2022, AD Sites & Services, DNS</p>
                 </div>
 
                 <div class="lab-card">
-                    <h3>NigelTech.local Lab Environment</h3>
-                    <p>Built comprehensive hybrid identity lab with domain controllers, Windows 11 clients, and Azure integration for hands-on IAM practice.</p>
-                    <p><strong>Technologies:</strong> VirtualBox, Windows Server 2022, Azure</p>
+                    <h3>Conditional Access Policies</h3>
+                    <p>Built and tested conditional access policies enforcing MFA, device compliance, and location-based restrictions. Simulated various scenarios including trusted/untrusted networks and compliant/non-compliant devices.</p>
+                    <p><strong>Technologies:</strong> Azure Entra ID, Intune, MFA</p>
                 </div>
             </div>
         </section>
 
         <section>
-            <h2>Certifications</h2>
-            <ul>
-                <li><strong>CompTIA A+</strong> - Hardware and Software Support</li>
-                <li><strong>CompTIA Security+</strong> - Security Fundamentals</li>
-                <li><strong>Bachelor of Science</strong> - Management Information Systems, Florida Atlantic University</li>
+            <h2>Certifications & Education</h2>
+            <ul style="line-height: 2;">
+                <li><strong>CompTIA A+</strong></li>
+                <li><strong>CompTIA Security+</strong></li>
+                <li><strong>Bachelor of Science, Management Information Systems</strong> - Florida Atlantic University</li>
             </ul>
-        </section>
-
-        <section>
-            <h2>Current Focus</h2>
-            <p>Actively pursuing entry-level Identity and Access Management positions while completing a structured 10-week IAM training curriculum. Current learning areas include authentication protocols (Kerberos, NTLM), conditional access policies, privileged access management, and enterprise identity governance.</p>
         </section>
 
         <section style="text-align: center;">
             <h2>Connect With Me</h2>
             <div class="contact-links">
-                <a href="https://linkedin.com/in/nigel-k-965229254" target="_blank">LinkedIn</a>
-                <a href="https://github.com/Nigel-Kendrick" target="_blank">GitHub</a>
-                <a href="mailto:NigelDKendrick@gmail.com">Email</a>
+                <a href="https://linkedin.com/in/nigel-kendrick" target="_blank">LinkedIn</a>
+                <a href="https://github.com/nigel-kendrick" target="_blank">GitHub</a>
+                <a href="mailto:Nigeldkendrick@gmail.com">Email</a>
             </div>
         </section>
     </div>
