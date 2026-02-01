@@ -167,8 +167,8 @@
             </ol>
 
             <!-- Screenshot 1: SSPR Configuration -->
-            <!-- <img src="../assets/images/sspr-azure-config.png" alt="Azure Entra ID SSPR Configuration">
-            <p class="img-caption">SSPR enabled with email and mobile authentication methods, password writeback activated</p> -->
+            <img src="../assets/images/sspr-password-writeback-config.png" alt="Azure Entra ID SSPR Configuration">
+            <p class="img-caption">Azure Entra Connect password reset configuration showing successful password writeback setup</p>
 
             <h3>Phase 2: Azure AD Connect Password Writeback Setup</h3>
             <ol>
@@ -197,8 +197,8 @@
             </ol>
 
             <!-- Screenshot 2: Successful Password Reset -->
-            <!-- <img src="../assets/images/sspr-success.png" alt="Successful SSPR password reset">
-            <p class="img-caption">User successfully reset password - validated authentication in both Azure AD and on-premises AD</p> -->
+           <img src="../assets/images/sspr-audit-log-success.png" alt="SSPR Audit Log Success">
+           <p class="img-caption">Azure AD audit log showing successful self-service password reset with on-premises writeback via Azure AD Connect</p>
         </section>
 
         <section>
@@ -216,9 +216,6 @@
             <p><strong>Issue:</strong> After successful Azure password reset, new password didn't immediately work on domain-joined workstation.</p>
             <p><strong>Solution:</strong> Discovered this was normal synchronization latency. AD Connect sync cycle runs every 30 minutes by default. For testing, manually triggered delta sync using PowerShell: <code>Start-ADSyncSyncCycle -PolicyType Delta</code>. In production, would set user expectations about 1-2 minute delay.</p>
 
-            <!-- Screenshot 3: AD Connect Sync Status -->
-            <!-- <img src="../assets/images/adconnect-sync-status.png" alt="Azure AD Connect Synchronization Status">
-            <p class="img-caption">Azure AD Connect showing successful password writeback synchronization to on-premises AD</p> -->
         </section>
 
         <section>
