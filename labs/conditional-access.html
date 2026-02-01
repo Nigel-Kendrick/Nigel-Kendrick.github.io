@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conditional Access Implementation - Nigel Kendrick</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f4f4f4;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            color: #2980b9;
+        }
+        
+        section {
+            background: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #3498db;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .tech-stack {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .tech-stack strong {
+            color: #2c3e50;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .img-caption {
+            text-align: center;
+            font-style: italic;
+            color: #7f8c8d;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+
+        .policy-box {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .policy-box h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        pre code {
+            background: transparent;
+            color: #ecf0f1;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Conditional Access Policy Implementation</h1>
+        <p>Modern Security Controls for Zero Trust Architecture</p>
+    </header>
+
+    <div class="container">
+        <a href="../index.html" class="back-link">← Back to Portfolio</a>
+
+        <section>
+            <h2>Project Overview</h2>
+            <p>Designed and implemented three Conditional Access policies in Azure Entra ID to enforce modern security controls across the NigelTech.local hybrid environment. This project demonstrates understanding of policy-based access control, zero-trust principles, and the "What If" testing methodology for validating security policies before enforcement.</p>
+
+            <div class="tech-stack">
+                <strong>Technologies Used:</strong> Azure Entra ID (Premium P2), Conditional Access, Azure AD Sign-in Logs, "What If" Analysis Tool
+            </div>
+        </section>
+
+        <section>
+            <h2>Business Problem</h2>
+            <p>Traditional perimeter-based security assumes everything inside the network is trusted. Modern threats require a zero-trust approach where every access request is verified based on user identity, device state, location, and risk level. Conditional Access policies enable organizations to enforce security requirements dynamically - blocking risky access attempts while allowing legitimate users seamless access to resources. This is critical for preventing credential theft, blocking legacy authentication exploits, and ensuring only compliant devices access corporate data.</p>
+        </section>
+
+        <section>
+            <h2>Understanding Conditional Access</h2>
+            
+            <h3>Policy Structure: IF-THEN Logic</h3>
+            <p>Conditional Access policies follow an IF-THEN model:</p>
+            <ul>
+                <li><strong>IF</strong> a user/device/location/risk condition is met</li>
+                <li><strong>THEN</strong> grant access with requirements, or block access completely</li>
+            </ul>
+
+            <h3>Policy Components</h3>
+            <table>
+                <tr>
+                    <th>Component</th>
+                    <th>Purpose</th>
+                    <th>Examples</th>
+                </tr>
+                <tr>
+                    <td><strong>Assignments</strong></td>
+                    <td>WHO and WHEN</td>
+                    <td>Specific users, groups, directory roles, cloud apps</td>
+                </tr>
+                <tr>
+                    <td><strong>Conditions</strong></td>
+                    <td>Context signals</td>
+                    <td>Sign-in risk, device platforms, locations, client apps</td>
+                </tr>
+                <tr>
+                    <td><strong>Access Controls</strong></td>
+                    <td>WHAT happens</td>
+                    <td>Grant with MFA, block access, require compliant device</td>
+                </tr>
+            </table>
+
+            <h3>Critical Evaluation Logic</h3>
+            <div class="highlight">
+                <strong>Key Concept:</strong> ALL Conditional Access policies apply to every sign-in attempt - not just the first match like firewall rules. If ANY policy says "Block," access is denied. If multiple policies grant access but require different controls, the user must satisfy ALL requirements. This is fundamental to understanding CA behavior.
+            </div>
+        </section>
+
+        <section>
+            <h2>Lab Environment - NigelTech.local</h2>
+            <ul>
+                <li>Azure Entra ID tenant with Premium P2 trial licensing</li>
+                <li>Hybrid Azure AD joined Windows 11 workstation</li>
+                <li>Test user accounts: jdoe (standard user), nigeladmin (admin account)</li>
+                <li>Synchronized users from on-premises Active Directory</li>
+                <li>Access to Azure Portal, Office 365, and sign-in logs</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Implementation Steps</h2>
+
+            <h3>Phase 1: Access Conditional Access Blade</h3>
+            <ol>
+                <li>Logged into Azure Portal (portal.azure.com)</li>
+                <li>Navigated to Entra ID → Security → Conditional Access</li>
+                <li>Reviewed existing policies (likely empty or baseline Microsoft-managed policies)</li>
+                <li>Explored the "What If" tool - this became critical for testing policies safely</li>
+            </ol>
+
+            <h3>Phase 2: Create Policy 1 - Block Legacy Authentication</h3>
+            <p><strong>Purpose:</strong> Legacy authentication protocols (IMAP, POP3, SMTP, Exchange ActiveSync) don't support MFA and are commonly exploited in brute-force attacks. Blocking these protocols is a zero-trust best practice.</p>
+
+            <div class="policy-box">
+                <h4>Policy: BLOCK - Legacy Authentication</h4>
+                <p><strong>Assignments:</strong></p>
+                <ul>
+                    <li>Users: All users</li>
+                    <li>Exclusions: nigeladmin (emergency access account to prevent lockout)</li>
+                    <li>Cloud apps: All cloud apps</li>
+                </ul>
+                <p><strong>Conditions:</strong></p>
+                <ul>
+                    <li>Client apps (Configure: Yes):
+                        <ul>
+                            <li>✅ Exchange ActiveSync clients</li>
+                            <li>✅ Other clients (IMAP, POP, SMTP)</li>
+                            <li>❌ Browser (unchecked)</li>
+                            <li>❌ Mobile apps and desktop clients (unchecked)</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p><strong>Access Controls:</strong></p>
+                <ul>
+                    <li>Grant: Block access</li>
+                </ul>
+                <p><strong>Enable Policy:</strong> Report-only (test mode before enforcement)</p>
+            </div>
+
+            <ol start="5">
+                <li>Clicked "+ New policy" in Conditional Access</li>
+                <li>Named policy: "BLOCK - Legacy Authentication"</li>
+                <li>Configured assignments: All users, excluded nigeladmin</li>
+                <li>Set cloud apps: All cloud apps</li>
+                <li>Configured conditions: Client apps → Selected legacy protocols only</li>
+                <li>Set access control: Block access</li>
+                <li>Set policy mode: Report-only</li>
+                <li>Clicked "Create"</li>
+            </ol>
+
+            <h3>Phase 3: Test Policy 1 with "What If" Tool</h3>
+            <ol>
+                <li>Navigated to Conditional Access → What If</li>
+                <li>Selected user: jdoe</li>
+                <li>Selected cloud apps: Office 365</li>
+                <li>Selected client app: "Other clients"</li>
+                <li>Clicked "What If" button</li>
+                <li>Result: Policy "BLOCK - Legacy Authentication" applied → Access would be blocked ✓</li>
+                <li>Changed client app to "Browser" → Policy did NOT apply (correct behavior) ✓</li>
+            </ol>
+
+            <!-- Screenshot 1: What If Tool Analysis -->
+            <!-- <img src="../assets/images/ca-whatif-legacy-block.png" alt="What If tool showing legacy authentication block">
+            <p class="img-caption">"What If" analysis showing BLOCK - Legacy Authentication policy applies when using legacy client apps</p> -->
+
+            <h3>Phase 4: Create Policy 2 - Require MFA for Global Admins</h3>
+            <p><strong>Purpose:</strong> Admin accounts are high-value targets. Requiring MFA for all Global Administrators adds defense-in-depth and is a zero-trust requirement.</p>
+
+            <div class="policy-box">
+                <h4>Policy: REQUIRE - MFA for Global Admins</h4>
+                <p><strong>Assignments:</strong></p>
+                <ul>
+                    <li>Users: Directory roles → Global Administrator</li>
+                    <li>Cloud apps: All cloud apps</li>
+                </ul>
+                <p><strong>Conditions:</strong> None (applies to all sign-ins)</p>
+                <p><strong>Access Controls:</strong></p>
+                <ul>
+                    <li>Grant: Grant access</li>
+                    <li>✅ Require multifactor authentication</li>
+                    <li>For multiple controls: Require all the selected controls</li>
+                </ul>
+                <p><strong>Enable Policy:</strong> Report-only</p>
+            </div>
+
+            <ol>
+                <li>Created new policy: "REQUIRE - MFA for Global Admins"</li>
+                <li>Assignments: Directory roles → Selected "Global Administrator"</li>
+                <li>Cloud apps: All cloud apps</li>
+                <li>Access controls: Grant access → Require multifactor authentication</li>
+                <li>Enable policy: Report-only</li>
+                <li>Created policy</li>
+            </ol>
+
+            <h3>Phase 5: Create Policy 3 - Require Hybrid Joined Device for Office 365</h3>
+            <p><strong>Purpose:</strong> Ensure only corporate-managed devices (hybrid Azure AD joined) can access Office 365 data. This prevents personal/unmanaged devices from accessing sensitive corporate information.</p>
+
+            <div class="policy-box">
+                <h4>Policy: REQUIRE - Hybrid Join for Office 365</h4>
+                <p><strong>Assignments:</strong></p>
+                <ul>
+                    <li>Users: All users</li>
+                    <li>Cloud apps: Office 365 (selected from app list)</li>
+                </ul>
+                <p><strong>Conditions:</strong></p>
+                <ul>
+                    <li>Device platforms: Any device</li>
+                </ul>
+                <p><strong>Access Controls:</strong></p>
+                <ul>
+                    <li>Grant: Grant access</li>
+                    <li>✅ Require Hybrid Azure AD joined device</li>
+                </ul>
+                <p><strong>Enable Policy:</strong> Report-only</p>
+            </div>
+
+            <ol>
+                <li>Created new policy: "REQUIRE - Hybrid Join for Office 365"</li>
+                <li>Assignments: All users</li>
+                <li>Cloud apps: Select apps → Searched "Office 365" → Selected it</li>
+                <li>Conditions: Device platforms → Any device</li>
+                <li>Access controls: Require Hybrid Azure AD joined device</li>
+                <li>Enable policy: Report-only</li>
+                <li>Created policy</li>
+            </ol>
+
+            <!-- Screenshot 2: Conditional Access Policies List -->
+            <!-- <img src="../assets/images/ca-policies-list.png" alt="List of configured Conditional Access policies">
+            <p class="img-caption">Conditional Access policies dashboard showing three configured policies in Report-only mode</p> -->
+
+            <h3>Phase 6: Validate Policy 3 with Real Sign-In</h3>
+            <ol>
+                <li>Logged into Windows 11 client as NIGELTECH\jdoe</li>
+                <li>Verified device hybrid join status:</li>
+            </ol>
+
+            <pre><code>dsregcmd /status
+# Output confirmed:
+# AzureAdJoined: YES
+# DomainJoined: YES</code></pre>
+
+            <ol start="3">
+                <li>Opened browser and navigated to portal.office.com</li>
+                <li>Signed in with jdoe credentials</li>
+                <li>Access granted successfully (policy in Report-only mode doesn't enforce yet)</li>
+                <li>Returned to Azure Portal → Entra ID → Sign-in logs</li>
+                <li>Found jdoe's recent Office 365 sign-in</li>
+                <li>Clicked on sign-in event → "Conditional Access" tab</li>
+                <li>Verified: Policy "REQUIRE - Hybrid Join for Office 365" showed "Report-only" result</li>
+                <li>Device compliance check: Success (device is hybrid joined)</li>
+            </ol>
+
+            <!-- Screenshot 3: Sign-in Logs with CA Results -->
+            <!-- <img src="../assets/images/ca-signin-logs.png" alt="Sign-in logs showing Conditional Access evaluation">
+            <p class="img-caption">Azure AD sign-in logs showing Conditional Access policy evaluation results for Office 365 access attempt</p> -->
+
+            <h3>Phase 7: Enable Policy 1 for Enforcement</h3>
+            <p><strong>Note:</strong> After testing in Report-only mode, switched one policy to enforcement to demonstrate real-world activation.</p>
+
+            <ol>
+                <li>Navigated to Conditional Access → Policies</li>
+                <li>Clicked on "BLOCK - Legacy Authentication" policy</li>
+                <li>Changed "Enable policy" from "Report-only" to "On"</li>
+                <li>Clicked "Save"</li>
+                <li>Policy is now actively enforcing - legacy authentication attempts will be blocked</li>
+            </ol>
+        </section>
+
+        <section>
+            <h2>Key Concepts Learned</h2>
+
+            <h3>Report-Only Mode: Safe Testing Strategy</h3>
+            <p>Report-only mode is critical for validating policies before enforcement. In this mode:</p>
+            <ul>
+                <li>Policies are evaluated during every sign-in</li>
+                <li>Results appear in sign-in logs</li>
+                <li>NO enforcement occurs - users are never blocked</li>
+                <li>Allows administrators to see impact before going live</li>
+            </ul>
+            <p>This prevents accidental lockouts and allows data-driven policy tuning.</p>
+
+            <h3>"What If" Tool: Pre-Deployment Validation</h3>
+            <p>The "What If" tool simulates policy evaluation without requiring actual sign-ins. By specifying user, app, location, device platform, and client app, you can see which policies would apply and what the outcome would be. This is essential for:</p>
+            <ul>
+                <li>Validating policy logic before creating</li>
+                <li>Troubleshooting unexpected blocks</li>
+                <li>Understanding policy interaction</li>
+                <li>Training and documentation</li>
+            </ul>
+
+            <h3>Policy Interaction and Cumulative Enforcement</h3>
+            <p>Unlike firewall rules (first-match wins), ALL Conditional Access policies evaluate for every sign-in:</p>
+            <ul>
+                <li>If Policy A requires MFA and Policy B requires compliant device → User needs BOTH</li>
+                <li>If any policy blocks access → Access denied, regardless of other policies granting</li>
+                <li>Policies are additive in their requirements</li>
+            </ul>
+
+            <h3>Emergency Access Account Exclusions</h3>
+            <p>Always exclude at least one admin account from blocking policies to prevent complete lockout. This "break glass" account should:</p>
+            <ul>
+                <li>Have a strong, unique password stored securely offline</li>
+                <li>Be excluded from MFA requirements and blocking policies</li>
+                <li>Be monitored closely for any usage</li>
+            </ul>
+
+            <div class="highlight">
+                <strong>Key Learning:</strong> The difference between "Report-only" and "On" is critical. Report-only mode lets you validate policies with real sign-in data without risking user lockouts. Always test policies in Report-only first, review sign-in logs for 24-48 hours, then enable enforcement. The "What If" tool is your pre-deployment testing tool, while Report-only is your production validation phase.
+            </div>
+        </section>
+
+        <section>
+            <h2>Challenges & Solutions</h2>
+
+            <h3>Understanding Client App Filtering</h3>
+            <p><strong>Challenge:</strong> Initially confused about the difference between "Browser," "Mobile apps and desktop clients," and "Other clients" when configuring the legacy auth block.</p>
+            <p><strong>Solution:</strong> Learned that:</p>
+            <ul>
+                <li><strong>Browser:</strong> Modern web-based access (supports MFA)</li>
+                <li><strong>Mobile apps and desktop clients:</strong> Modern auth-capable native apps (Outlook mobile, Teams desktop)</li>
+                <li><strong>Other clients:</strong> Legacy protocols (IMAP, POP3, SMTP, basic auth) that DON'T support MFA</li>
+                <li><strong>Exchange ActiveSync:</strong> Mobile email protocol, can be legacy or modern depending on configuration</li>
+            </ul>
+            <p>To block ONLY legacy auth, must check "Exchange ActiveSync clients" and "Other clients" while leaving modern options unchecked.</p>
+
+            <h3>Policy Didn't Show in Sign-In Logs Initially</h3>
+            <p><strong>Issue:</strong> Created policies but didn't see them in sign-in logs immediately after user login.</p>
+            <p><strong>Solution:</strong> Sign-in logs can have a 5-10 minute delay. Also learned that policies must be in "Report-only" or "On" state to appear in logs - if still in draft or disabled, they won't evaluate. Refreshed sign-in logs after waiting a few minutes and policies appeared correctly.</p>
+
+            <h3>Understanding "Require All" vs "Require One"</h3>
+            <p><strong>Learning Point:</strong> When configuring grant controls with multiple requirements (like MFA + compliant device), there's an option "For multiple controls" with two choices:</p>
+            <ul>
+                <li><strong>Require all the selected controls:</strong> User must satisfy ALL requirements (AND logic)</li>
+                <li><strong>Require one of the selected controls:</strong> User must satisfy ANY ONE requirement (OR logic)</li>
+            </ul>
+            <p>For security policies, "Require all" is typically the correct choice. "Require one" is used when offering alternative authentication methods.</p>
+        </section>
+
+        <section>
+            <h2>Key Takeaways</h2>
+            <ul>
+                <li><strong>Zero Trust Foundation:</strong> Conditional Access is the enforcement mechanism for zero-trust architecture. Every access request is verified based on signals, not assumed trust based on network location.</li>
+                <li><strong>Blocking Legacy Auth:</strong> This is one of the highest-impact security policies. Legacy protocols don't support MFA and are a primary attack vector for credential stuffing and brute force attacks.</li>
+                <li><strong>MFA for Admins:</strong> Admin accounts require additional protection. Even if standard users don't have MFA enforced, admins should always require it.</li>
+                <li><strong>Device Trust:</strong> Requiring hybrid Azure AD joined (or compliant) devices prevents personal/BYOD devices from accessing corporate data, enforcing corporate security policies.</li>
+                <li><strong>Testing Methodology:</strong> Always follow this sequence: "What If" tool → Report-only mode → Review sign-in logs → Enable enforcement. This prevents accidental lockouts.</li>
+                <li><strong>Policy Naming:</strong> Using prefixes like "BLOCK -" or "REQUIRE -" makes policies immediately understandable and helps with management at scale.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Real-World Application</h2>
+            <p>This lab demonstrates capabilities directly applicable to enterprise IAM analyst roles:</p>
+            <ul>
+                <li>Designing policy-based access controls aligned with zero-trust principles</li>
+                <li>Using "What If" analysis for pre-deployment policy validation</li>
+                <li>Interpreting sign-in logs to validate policy effectiveness</li>
+                <li>Understanding policy interaction and cumulative enforcement</li>
+                <li>Implementing emergency access account exclusions to prevent lockout</li>
+                <li>Balancing security requirements with user experience</li>
+                <li>Documenting policy intent and configuration for audit purposes</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Integration with Other IAM Components</h2>
+            <p>Conditional Access policies work in conjunction with other identity services:</p>
+            <ul>
+                <li><strong>Azure AD MFA:</strong> CA policies enforce MFA requirements; MFA provides the authentication method</li>
+                <li><strong>Hybrid Azure AD Join:</strong> CA policies can require device trust; hybrid join provides that trust signal</li>
+                <li><strong>Intune Compliance:</strong> CA policies can require compliant devices; Intune evaluates device compliance status</li>
+                <li><strong>Azure AD Identity Protection:</strong> CA policies can respond to sign-in risk and user risk signals detected by Identity Protection</li>
+                <li><strong>Privileged Identity Management (PIM):</strong> CA policies can require MFA for PIM role activation</li>
+            </ul>
+        </section>
+
+        <a href="../index.html" class="back-link">← Back to Portfolio</a>
+    </div>
+</body>
+</html>
