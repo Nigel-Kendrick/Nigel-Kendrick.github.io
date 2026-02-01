@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSPR Implementation - Nigel Kendrick</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f4f4f4;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            color: #2980b9;
+        }
+        
+        section {
+            background: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #3498db;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .tech-stack {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .tech-stack strong {
+            color: #2c3e50;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .img-caption {
+            text-align: center;
+            font-style: italic;
+            color: #7f8c8d;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Self-Service Password Reset (SSPR) Implementation</h1>
+        <p>Azure Entra ID with On-Premises Password Writeback</p>
+    </header>
+
+    <div class="container">
+        <a href="../index.html" class="back-link">← Back to Portfolio</a>
+
+        <section>
+            <h2>Project Overview</h2>
+            <p>Implemented Azure AD Self-Service Password Reset with password writeback functionality to on-premises Active Directory in the NigelTech.local hybrid environment. This project demonstrates end-to-end understanding of hybrid identity synchronization, authentication methods, and user self-service capabilities.</p>
+
+            <div class="tech-stack">
+                <strong>Technologies Used:</strong> Azure Entra ID, Azure AD Connect (Entra Connect), Windows Server 2022 Active Directory, PowerShell
+            </div>
+        </section>
+
+        <section>
+            <h2>Business Problem</h2>
+            <p>In enterprise environments, password reset requests create significant helpdesk overhead and user downtime. Users often wait hours for password resets, impacting productivity. SSPR allows users to securely reset their own passwords 24/7, reducing helpdesk tickets by up to 40% and improving user satisfaction.</p>
+        </section>
+
+        <section>
+            <h2>Lab Environment - NigelTech.local</h2>
+            <ul>
+                <li>Windows Server 2022 Domain Controller (DC01.NigelTech.local)</li>
+                <li>Azure AD Connect (Entra Connect) synchronization server</li>
+                <li>Windows 11 client (domain-joined test machine)</li>
+                <li>Azure Entra ID tenant with hybrid identity configuration</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Implementation Steps</h2>
+
+            <h3>Phase 1: Azure Entra ID SSPR Configuration</h3>
+            <ol>
+                <li>Navigated to Azure Portal → Entra ID → Password Reset</li>
+                <li>Enabled SSPR for "All users"</li>
+                <li>Configured authentication methods:
+                    <ul>
+                        <li>Email address (primary method)</li>
+                        <li>Mobile phone (secondary method)</li>
+                        <li>Set requirement: 1 method to reset, 2 methods to register</li>
+                    </ul>
+                </li>
+                <li>Enabled "Password writeback" under On-premises integration</li>
+                <li>Configured registration enforcement to require users to register on next sign-in</li>
+            </ol>
+
+            <!-- Screenshot 1: SSPR Configuration -->
+            <!-- <img src="../assets/images/sspr-azure-config.png" alt="Azure Entra ID SSPR Configuration">
+            <p class="img-caption">SSPR enabled with email and mobile authentication methods, password writeback activated</p> -->
+
+            <h3>Phase 2: Azure AD Connect Password Writeback Setup</h3>
+            <ol>
+                <li>Opened Azure AD Connect configuration wizard on sync server</li>
+                <li>Selected "Configure device options" then backed out to see full options</li>
+                <li>Selected "Customize synchronization options"</li>
+                <li>Under "Optional Features" checked "Password writeback"</li>
+                <li>Verified AD Connect service account permissions in Active Directory</li>
+                <li>Completed wizard and initiated full synchronization cycle</li>
+            </ol>
+
+            <h3>Phase 3: User Testing & Validation</h3>
+            <ol>
+                <li>Created test user account in on-premises Active Directory</li>
+                <li>Waited for AD Connect sync (verified user appeared in Azure AD)</li>
+                <li>Logged into Azure Portal as test user → Prompted to register authentication methods</li>
+                <li>Registered email address and verified with code</li>
+                <li>Initiated password reset from aka.ms/sspr</li>
+                <li>Entered username → Verified identity with email code → Set new password</li>
+                <li>Validated new password worked for:
+                    <ul>
+                        <li>Azure AD sign-in (Office 365 portal)</li>
+                        <li>On-premises sign-in (domain-joined Windows 11 workstation)</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <!-- Screenshot 2: Successful Password Reset -->
+            <!-- <img src="../assets/images/sspr-success.png" alt="Successful SSPR password reset">
+            <p class="img-caption">User successfully reset password - validated authentication in both Azure AD and on-premises AD</p> -->
+        </section>
+
+        <section>
+            <h2>Challenges & Solutions</h2>
+
+            <h3>Challenge: UPN Suffix Mismatch</h3>
+            <p><strong>Issue:</strong> Initial sync showed on-premises user UPN as user@NigelTech.local, but Azure AD required a verified domain suffix. Couldn't complete SSPR registration because UPNs didn't match.</p>
+            <p><strong>Solution:</strong> Added custom UPN suffix in Active Directory Domains and Trusts to match verified Azure domain. Updated test users with PowerShell to use the new UPN suffix. Re-synced with Azure AD Connect. This aligned UPNs between on-prem and cloud.</p>
+
+            <div class="highlight">
+                <strong>Key Learning:</strong> In hybrid environments, UPN alignment between on-premises AD and Azure AD is critical for SSPR functionality. Always verify UPN suffixes match a verified domain in Azure before enabling SSPR.
+            </div>
+
+            <h3>Challenge: Password Writeback Delay</h3>
+            <p><strong>Issue:</strong> After successful Azure password reset, new password didn't immediately work on domain-joined workstation.</p>
+            <p><strong>Solution:</strong> Discovered this was normal synchronization latency. AD Connect sync cycle runs every 30 minutes by default. For testing, manually triggered delta sync using PowerShell: <code>Start-ADSyncSyncCycle -PolicyType Delta</code>. In production, would set user expectations about 1-2 minute delay.</p>
+
+            <!-- Screenshot 3: AD Connect Sync Status -->
+            <!-- <img src="../assets/images/adconnect-sync-status.png" alt="Azure AD Connect Synchronization Status">
+            <p class="img-caption">Azure AD Connect showing successful password writeback synchronization to on-premises AD</p> -->
+        </section>
+
+        <section>
+            <h2>Key Takeaways</h2>
+            <ul>
+                <li><strong>Hybrid complexity:</strong> Password writeback adds dependencies on network connectivity, AD Connect health, and proper service account permissions. Monitoring is essential.</li>
+                <li><strong>Security design:</strong> Requiring 2 methods for registration provides defense-in-depth. If one method is compromised, attacker still can't reset password.</li>
+                <li><strong>User adoption:</strong> Registration enforcement is critical. Without it, users won't register and SSPR adoption fails, defeating the purpose.</li>
+                <li><strong>Helpdesk impact:</strong> Organizations typically see 40-50% reduction in password reset tickets after SSPR implementation with proper user training.</li>
+                <li><strong>Audit trail:</strong> All password resets are logged in Azure AD audit logs, providing complete compliance visibility.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Real-World Application</h2>
+            <p>This lab demonstrates capabilities directly applicable to enterprise IAM analyst roles:</p>
+            <ul>
+                <li>Configuring self-service identity workflows to reduce operational overhead</li>
+                <li>Managing hybrid identity synchronization and troubleshooting sync issues</li>
+                <li>Implementing secure authentication methods and registration policies</li>
+                <li>Understanding UPN management in hybrid environments</li>
+                <li>Balancing security requirements with user experience</li>
+            </ul>
+        </section>
+
+        <a href="../index.html" class="back-link">← Back to Portfolio</a>
+    </div>
+</body>
+</html>
