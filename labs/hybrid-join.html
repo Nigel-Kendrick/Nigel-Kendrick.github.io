@@ -136,22 +136,22 @@
             <p>Configured hybrid Azure AD join for domain-joined Windows 11 devices in the NigelTech.local environment. This implementation enables seamless single sign-on (SSO) to both on-premises and cloud resources, allowing devices to authenticate to Azure AD while remaining joined to the on-premises Active Directory domain.</p>
 
             <div class="tech-stack">
-                <strong>Technologies Used:</strong> Azure Entra ID, Azure AD Connect, Group Policy, Windows Server 2022 Active Directory, Windows 11
+                <strong>Technologies Used:</strong> Azure Entra ID, Azure AD Connect (Entra Connect), Group Policy, Windows Server 2022 Active Directory, Windows 11
             </div>
         </section>
 
         <section>
             <h2>Business Problem</h2>
-            <p>Organizations with hybrid infrastructures need devices to access both on-premises resources (file shares, printers, legacy apps) and cloud services (Microsoft 365, Azure resources). Traditional domain join only provides on-premises authentication, while Azure AD join only provides cloud authentication. Hybrid Azure AD join solves this by enabling dual authentication, providing users seamless access to both environments with a single sign-on experience.</p>
+            <p>Organizations with hybrid infrastructures need devices to access both on-premises resources (file shares, printers, legacy apps) and cloud services (Microsoft 365, Azure resources). Traditional domain join only provides on-premises authentication, while Azure AD join only provides cloud authentication. Hybrid Azure AD join solves this by enabling dual authentication, providing users seamless access to both environments with a single sign-on experience. This eliminates the need for users to authenticate separately for cloud and on-premises resources.</p>
         </section>
 
         <section>
             <h2>Lab Environment - NigelTech.local</h2>
             <ul>
                 <li>Windows Server 2022 Domain Controller (DC01.NigelTech.local)</li>
-                <li>Azure AD Connect server with hybrid configuration</li>
+                <li>Azure AD Connect (Entra Connect) server with hybrid configuration</li>
                 <li>Windows 11 Pro domain-joined workstation</li>
-                <li>Azure Entra ID tenant (Premium P1 licensing)</li>
+                <li>Azure Entra ID tenant</li>
                 <li>Test user accounts synchronized from on-prem to Azure AD</li>
             </ul>
         </section>
@@ -161,45 +161,33 @@
 
             <h3>Phase 1: Azure AD Connect Configuration</h3>
             <ol>
-                <li>Opened Azure AD Connect wizard on sync server</li>
+                <li>Opened Azure AD Connect (Entra Connect) configuration wizard</li>
                 <li>Selected "Configure device options"</li>
                 <li>Chose "Configure Hybrid Azure AD join"</li>
-                <li>Selected target operating system: Windows 10 or later</li>
-                <li>Configured Service Connection Point (SCP) in on-premises AD</li>
-                <li>Specified domains for hybrid join deployment</li>
-                <li>Completed wizard and initiated sync cycle</li>
+                <li>Selected target operating system: Windows 10 or later (for modern devices)</li>
+                <li>Configured Service Connection Point (SCP) to publish Azure AD tenant information to on-premises Active Directory</li>
+                <li>Verified tenant credentials and domain selection</li>
+                <li>Completed wizard - this automatically created the SCP in the Configuration partition</li>
             </ol>
 
-            
-
-            <h3>Phase 2: Group Policy Configuration</h3>
+            <h3>Phase 2: Device Registration Testing</h3>
             <ol>
-                <li>Created new GPO: "Hybrid Azure AD Join Configuration"</li>
-                <li>Navigated to: Computer Configuration → Policies → Administrative Templates → Windows Components → Device Registration</li>
-                <li>Enabled: "Register domain joined computers as devices"</li>
-                <li>Linked GPO to the OU containing target workstations</li>
-                <li>Ran <code>gpupdate /force</code> on test client</li>
-            </ol>
-
-            <h3>Phase 3: Service Connection Point (SCP) Verification</h3>
-            <ol>
-                <li>Opened ADSI Edit on domain controller</li>
-                <li>Connected to Configuration naming context</li>
-                <li>Navigated to: CN=Configuration → CN=Services → CN=Device Registration Configuration</li>
-                <li>Verified SCP object contained correct Azure AD tenant information</li>
-                <li>Confirmed <code>keywords</code> attribute included tenant ID</li>
-            </ol>
-
-            <h3>Phase 4: Device Registration & Testing</h3>
-            <ol>
-                <li>Logged into Windows 11 workstation as domain user</li>
-                <li>Triggered device registration with: <code>dsregcmd /join</code></li>
-                <li>Verified status with: <code>dsregcmd /status</code></li>
-                <li>Confirmed output showed:
+                <li>Logged into Windows 11 workstation as synchronized domain user</li>
+                <li>Opened Command Prompt as Administrator</li>
+                <li>Ran <code>dsregcmd /status</code> to check current device state</li>
+                <li>Verified initial state showed:
+                    <ul>
+                        <li>DomainJoined: YES (already domain-joined)</li>
+                        <li>AzureAdJoined: NO (not yet hybrid joined)</li>
+                    </ul>
+                </li>
+                <li>Triggered hybrid join registration by restarting the device</li>
+                <li>After restart, logged back in and ran <code>dsregcmd /status</code> again</li>
+                <li>Confirmed successful hybrid join:
                     <ul>
                         <li>AzureAdJoined: YES</li>
                         <li>DomainJoined: YES</li>
-                        <li>Device successfully registered in Azure AD</li>
+                        <li>Device received Primary Refresh Token (PRT)</li>
                     </ul>
                 </li>
             </ol>
@@ -207,19 +195,18 @@
             <img src="../assets/images/hybrid-join-dsregcmd-status.png" alt="dsregcmd status showing hybrid join">
             <p class="img-caption">Command output showing AzureAdJoined: YES and DomainJoined: YES, confirming successful hybrid Azure AD join</p>
 
-            <h3>Phase 5: Azure Portal Validation</h3>
+            <h3>Phase 3: Azure Portal Validation</h3>
             <ol>
                 <li>Logged into Azure Portal → Entra ID → Devices</li>
-                <li>Located the registered Windows 11 device</li>
+                <li>Located the Windows 11 device in the devices list</li>
                 <li>Verified device properties:
                     <ul>
                         <li>Join Type: Hybrid Azure AD joined</li>
                         <li>Enabled: Yes</li>
-                        <li>MDM: Not enrolled (expected for this lab)</li>
-                        <li>Owner: Test user account</li>
+                        <li>Registration timestamp matched when device joined</li>
                     </ul>
                 </li>
-                <li>Confirmed device could be targeted by conditional access policies</li>
+                <li>Confirmed device is now visible to Azure AD and can be targeted by conditional access policies</li>
             </ol>
 
             <img src="../assets/images/hybrid-join-azure-device-status.png" alt="Azure Portal showing hybrid joined device">
@@ -227,29 +214,47 @@
         </section>
 
         <section>
-            <h2>Challenges & Solutions</h2>
+            <h2>Key Concepts Learned</h2>
 
-            <h3>Challenge: Initial Device Registration Failed</h3>
-            <p><strong>Issue:</strong> After running <code>dsregcmd /join</code>, device showed "DomainJoined: YES" but "AzureAdJoined: NO". Event Viewer showed error 220 - device registration failed to locate SCP.</p>
-            <p><strong>Solution:</strong> Verified SCP creation in Active Directory. The Azure AD Connect wizard had not properly created the SCP object. Manually verified the SCP path in ADSI Edit, found it was missing. Re-ran Azure AD Connect device options wizard, ensuring correct tenant credentials were provided. After completion, SCP appeared correctly and device registration succeeded.</p>
+            <h3>Service Connection Point (SCP)</h3>
+            <p>The SCP is a critical Active Directory object that domain-joined devices use to discover which Azure AD tenant to register with. When Azure AD Connect configures hybrid join, it creates this SCP object in the Configuration partition (CN=Services, CN=Device Registration Configuration). This makes the SCP forest-wide discoverable, so all domain-joined devices can automatically find the correct Azure AD tenant without manual configuration.</p>
 
-            <h3>Challenge: Group Policy Not Applying</h3>
-            <p><strong>Issue:</strong> GPO for device registration didn't apply to test workstation even after <code>gpupdate /force</code>.</p>
-            <p><strong>Solution:</strong> Ran <code>gpresult /r</code> and discovered the workstation OU had "Block Inheritance" enabled from a previous configuration. Removed block inheritance setting. Also confirmed the device registration GPO was linked to the correct OU and had proper security filtering (applied to "Domain Computers"). After fixing, ran <code>gpupdate /force</code> again and verified with <code>gpresult /r</code> that policy applied successfully.</p>
+            <h3>Device States and Authentication</h3>
+            <p>Understanding the difference between device join states is essential:</p>
+            <ul>
+                <li><strong>Domain Joined Only:</strong> Device authenticates to on-prem AD. Can access file shares, printers, but cannot seamlessly access cloud resources.</li>
+                <li><strong>Azure AD Joined Only:</strong> Device authenticates to Azure AD. Can access Microsoft 365 and cloud apps, but cannot access on-prem resources.</li>
+                <li><strong>Hybrid Azure AD Joined:</strong> Device is registered in both AD and Azure AD. Users authenticate once and get access to both environments through Primary Refresh Token (PRT).</li>
+            </ul>
+
+            <h3>Primary Refresh Token (PRT)</h3>
+            <p>When a device is hybrid joined and a user signs in, they receive a PRT from Azure AD. This token enables SSO to cloud applications without additional authentication prompts. The PRT is tied to the device and user combination, providing secure seamless access.</p>
 
             <div class="highlight">
-                <strong>Key Learning:</strong> The Service Connection Point (SCP) is critical for hybrid join. Without it, domain-joined devices cannot discover the Azure AD tenant to register with. Always verify SCP creation in ADSI Edit after running Azure AD Connect configuration. The SCP must be in the Configuration partition to be forest-wide discoverable.
+                <strong>Key Learning:</strong> The <code>dsregcmd /status</code> command is the primary troubleshooting tool for device join states. The output shows critical information including AzureAdJoined status, DomainJoined status, TenantId, DeviceId, and PRT status. This command should be the first step when diagnosing device authentication issues.
             </div>
+        </section>
+
+        <section>
+            <h2>Challenges & Solutions</h2>
+
+            <h3>Understanding Device Join vs Device Registration</h3>
+            <p><strong>Initial Confusion:</strong> The terms "join" and "register" are often used interchangeably, but they have different meanings in the context of hybrid environments.</p>
+            <p><strong>Clarification:</strong> "Domain join" refers to the traditional on-premises Active Directory join. "Azure AD registration" is what happens when a device becomes known to Azure AD. Hybrid Azure AD join combines both - the device is domain-joined to on-prem AD AND registered in Azure AD, creating a hybrid state.</p>
+
+            <h3>Waiting for Automatic Registration</h3>
+            <p><strong>Issue:</strong> After configuring Azure AD Connect for hybrid join, the device didn't immediately show as hybrid joined.</p>
+            <p><strong>Solution:</strong> Learned that hybrid join registration happens automatically during user login after the SCP is configured, but it may take a few minutes or require a restart. The device queries the SCP during login, discovers the tenant, and registers with Azure AD in the background. Restarting the device after SCP creation accelerated this process.</p>
         </section>
 
         <section>
             <h2>Key Takeaways</h2>
             <ul>
-                <li><strong>Authentication flow:</strong> Hybrid joined devices authenticate to on-prem AD first, then automatically receive Primary Refresh Token (PRT) from Azure AD for seamless cloud access.</li>
-                <li><strong>Conditional Access enablement:</strong> Hybrid join is a prerequisite for device-based conditional access policies. Without it, cannot enforce "require compliant device" rules.</li>
-                <li><strong>Single Sign-On benefit:</strong> Users sign in once with domain credentials and automatically access Microsoft 365, Azure resources, and on-prem resources without repeated prompts.</li>
-                <li><strong>Management flexibility:</strong> Devices can be managed by both Group Policy (on-prem) and Intune (cloud), allowing gradual migration to modern management.</li>
-                <li><strong>Troubleshooting command:</strong> <code>dsregcmd /status</code> is the essential diagnostic tool. Check AzureAdJoined, DomainJoined, and TenantId fields to validate configuration.</li>
+                <li><strong>Automatic Process:</strong> Once Azure AD Connect configures the SCP, hybrid join happens automatically when domain users sign in. No manual per-device configuration needed.</li>
+                <li><strong>Conditional Access Foundation:</strong> Hybrid join is required for device-based conditional access policies. You cannot enforce "require hybrid Azure AD joined device" without this configuration.</li>
+                <li><strong>SSO Benefit:</strong> Users sign in once with domain credentials and automatically get access to Microsoft 365, SharePoint Online, Teams, and other cloud resources without additional prompts.</li>
+                <li><strong>Troubleshooting Tool:</strong> <code>dsregcmd /status</code> provides complete visibility into device state. Key fields to check: AzureAdJoined, DomainJoined, TenantId, and AzureAdPrt (Primary Refresh Token).</li>
+                <li><strong>SCP Importance:</strong> The Service Connection Point is the discovery mechanism. Without it, devices don't know which Azure AD tenant to register with.</li>
             </ul>
         </section>
 
@@ -257,12 +262,12 @@
             <h2>Real-World Application</h2>
             <p>This lab demonstrates capabilities directly applicable to enterprise IAM roles:</p>
             <ul>
-                <li>Configuring device identity in hybrid environments</li>
-                <li>Understanding the relationship between device join states and authentication</li>
-                <li>Troubleshooting device registration issues using Event Viewer and dsregcmd</li>
-                <li>Implementing foundational requirements for zero-trust security (device compliance)</li>
-                <li>Managing Service Connection Points in Active Directory</li>
-                <li>Enabling conditional access policies based on device trust</li>
+                <li>Configuring device identity in hybrid environments for large-scale deployments</li>
+                <li>Understanding authentication flows between on-premises and cloud systems</li>
+                <li>Using <code>dsregcmd</code> for troubleshooting device join issues</li>
+                <li>Implementing prerequisites for zero-trust security models (device trust)</li>
+                <li>Enabling seamless SSO for improved user experience</li>
+                <li>Laying groundwork for conditional access policies based on device state</li>
             </ul>
         </section>
 
@@ -270,10 +275,10 @@
             <h2>Integration with Other IAM Components</h2>
             <p>Hybrid Azure AD join is foundational for several advanced IAM capabilities:</p>
             <ul>
-                <li><strong>Conditional Access:</strong> Enables "require hybrid Azure AD joined device" policy condition</li>
-                <li><strong>Windows Hello for Business:</strong> Requires hybrid join for certificate trust deployment model</li>
-                <li><strong>Seamless SSO:</strong> Works in conjunction with hybrid join for optimal user experience</li>
-                <li><strong>Intune Co-Management:</strong> Allows gradual transition from Group Policy to cloud management</li>
+                <li><strong>Conditional Access:</strong> Enables "require hybrid Azure AD joined device" as a policy condition, allowing you to block access from non-corporate devices</li>
+                <li><strong>Intune Management:</strong> Hybrid joined devices can be co-managed by Group Policy and Intune, allowing gradual transition to modern cloud management</li>
+                <li><strong>Windows Hello for Business:</strong> Hybrid join is required for deploying Windows Hello in hybrid environments with certificate-based trust</li>
+                <li><strong>Seamless SSO:</strong> Works alongside hybrid join to provide optimal authentication experience across on-prem and cloud apps</li>
             </ul>
         </section>
 
