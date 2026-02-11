@@ -354,13 +354,11 @@
                 <li>Verified user profile showed SSO authentication</li>
             </ol>
 
-            <!-- Screenshot 1: Split Screen Success -->
-            <!-- <img src="../assets/images/salesforce-sso-split-screen.png" alt="Split screen showing Azure AD sign-in logs and Salesforce logged in via SSO">
-            <p class="img-caption">Left: Azure AD sign-in logs showing successful SSO authentication events. Right: Salesforce Developer Edition successfully accessed via Azure AD SSO - no Salesforce password required</p> -->
+<img src="../assets/images/01-split-screen-azure-salesforce.png" alt="Split screen showing Azure AD sign-in logs and Salesforce logged in via SSO">
+<p class="img-caption">Left: Azure AD sign-in logs showing successful SSO authentication events. Right: Salesforce Developer Edition successfully accessed via Azure AD SSO - no Salesforce password required</p>
 
-            <!-- Screenshot 2: Salesforce SAML Configuration -->
-            <!-- <img src="../assets/images/salesforce-saml-config.png" alt="Salesforce SAML Identity Provider configuration">
-            <p class="img-caption">Salesforce SAML Identity Provider settings showing critical Federation ID configuration that enables proper user mapping from Azure AD NameID to Salesforce user</p> -->
+<img src="../assets/images/02-salesforce-sso-config.png" alt="Salesforce SAML Identity Provider configuration">
+<p class="img-caption">Salesforce SAML Identity Provider settings showing critical Federation ID configuration that enables proper user mapping from Azure AD NameID to Salesforce user</p>
         </section>
 
         <section>
@@ -510,9 +508,15 @@
                 <li>Supports compliance and forensic investigations</li>
             </ul>
 
-            <!-- Screenshot 3: Azure AD Claims Mapping -->
-            <!-- <img src="../assets/images/salesforce-claims-mapping.png" alt="Azure AD SAML claims configuration">
-            <p class="img-caption">Azure AD User Attributes & Claims configuration showing NameID and custom claims sent to Salesforce in SAML assertion</p> -->
+<img src="../assets/images/03-azure-claims-mapping.png" alt="Azure AD SAML claims configuration">
+<p class="img-caption">Azure AD User Attributes & Claims configuration showing NameID and custom claims sent to Salesforce in SAML assertion</p>
+
+            <h3>Network-Level SAML Traffic Analysis</h3>
+            <p>Using browser DevTools Network tab, the complete SAML authentication flow can be observed and validated. This demonstrates technical troubleshooting capability and understanding of HTTP-level protocol mechanics.</p>
+
+            <img src="../assets/images/04-network-flow-filtered.png alt="Browser DevTools showing filtered SAML network traffic">
+            <p class="img-caption">Browser DevTools Network tab filtered for SAML traffic showing the complete authentication flow: AuthnRequest → SAML assertion → ACS POST → Salesforce frontdoor redirect. 4 SAML-related requests isolated from 365 total requests demonstrate targeted troubleshooting skills.</p>
+            
         </section>
 
         <section>
@@ -561,28 +565,6 @@
         </section>
 
         <section>
-            <h2>Real-World Business Applications</h2>
-
-            <h3>Law Firm Scenario (Greenberg Traurig)</h3>
-            <p>A large law firm uses Salesforce for client relationship management (CRM) and Azure AD for employee authentication:</p>
-            <ul>
-                <li>500+ attorneys across multiple offices need Salesforce access</li>
-                <li>SAML SSO eliminates separate Salesforce passwords - reduces password-related help desk tickets by 40%</li>
-                <li>Conditional Access policies in Azure AD enforce MFA for Salesforce access from non-corporate networks</li>
-                <li>When attorney leaves firm, Azure AD account disabled → automatically loses Salesforce access (no orphaned accounts)</li>
-                <li>Audit logs in Azure AD provide single pane of glass for compliance reporting</li>
-            </ul>
-
-            <h3>Credit Union Scenario (Space Coast Credit Union)</h3>
-            <p>Financial institution with strict compliance requirements:</p>
-            <ul>
-                <li>Uses Salesforce for member services and loan processing</li>
-                <li>SAML SSO enables centralized authentication policy enforcement</li>
-                <li>Azure AD Identity Protection detects compromised credentials - blocks Salesforce access until password reset</li>
-                <li>Federation ID mapping ensures accurate audit trail linking Salesforce actions to specific employees</li>
-                <li>Satisfies regulatory requirements (GLBA, FFIEC) for centralized identity governance</li>
-            </ul>
-        </section>
 
         <section>
             <h2>Skills Demonstrated</h2>
