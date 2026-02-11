@@ -14,7 +14,7 @@ This portfolio documents my technical labs and IAM learning journey as I transit
 - Hybrid Azure AD Join implementation
 - Multi-site Active Directory replication
 - Conditional Access policy design and testing
-
+- Salesforce SAML SSO Integration
 ## Professional Background
 
 - **Current:** Systems Administrator at HumanIT Solutions
@@ -28,4 +28,4 @@ This portfolio documents my technical labs and IAM learning journey as I transit
 
 ---
 
-*Last updated: January 2025*
+*Last updated: February 2026*
