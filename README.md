@@ -12,7 +12,6 @@ This portfolio documents my technical labs and IAM learning journey as I transit
 
 - Self-Service Password Reset with password writeback
 - Hybrid Azure AD Join implementation
-- Multi-site Active Directory replication
 - Conditional Access policy design and testing
 - Salesforce SAML SSO Integration
 ## Professional Background
