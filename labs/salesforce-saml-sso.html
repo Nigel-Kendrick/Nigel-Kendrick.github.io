@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salesforce SAML SSO Integration - Nigel Kendrick</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <nav>
+        <a href="../index.html">← Back to Portfolio</a>
+    </nav>
+
+    <header>
+        <h1>Salesforce SAML SSO Integration with Azure AD</h1>
+        <p class="subtitle">Enterprise Single Sign-On using SAML 2.0 Protocol</p>
+    </header>
+
+    <main>
+        <!-- Project Overview -->
+        <section>
+            <h2>Project Overview</h2>
+            <p>Configured enterprise Single Sign-On between Microsoft Azure AD (Entra ID) and Salesforce Developer Edition using SAML 2.0 protocol in a hybrid lab environment.</p>
+            
+            <div class="tech-stack">
+                <h3>Technologies Used</h3>
+                <ul>
+                    <li>Microsoft Azure AD (Entra ID)</li>
+                    <li>Salesforce Developer Edition</li>
+                    <li>SAML 2.0 Protocol</li>
+                    <li>X.509 Digital Certificates (RSA-SHA256)</li>
+                    <li>Browser DevTools Network Analysis</li>
+                </ul>
+            </div>
+
+            <div class="environment">
+                <h3>Environment Details</h3>
+                <ul>
+                    <li><strong>Identity Provider:</strong> Microsoft Azure AD (Entra ID)</li>
+                    <li><strong>Service Provider:</strong> Salesforce Developer Edition</li>
+                    <li><strong>Protocol:</strong> SAML 2.0</li>
+                    <li><strong>Authentication:</strong> Federated identity via SAML assertions</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Implementation -->
+        <section>
+            <h2>Implementation</h2>
+            
+            <h3>Azure AD Configuration</h3>
+            <ol>
+                <li>Created enterprise application for Salesforce from Azure AD gallery</li>
+                <li>Configured SAML-based Single Sign-On</li>
+                <li>Set Entity ID and Reply URLs for Salesforce instance</li>
+                <li>Mapped user attributes as SAML claims</li>
+                <li>Downloaded and deployed SAML signing certificate</li>
+            </ol>
+
+            <h3>Salesforce Configuration</h3>
+            <ol>
+                <li>Enabled SAML in Salesforce Single Sign-On Settings</li>
+                <li>Created Identity Provider configuration using Azure AD metadata</li>
+                <li>Configured SAML identity matching and assertion validation</li>
+                <li>Deployed My Domain for SSO authentication</li>
+                <li>Created user accounts with Federation ID mapping</li>
+            </ol>
+        </section>
+
+        <!-- Screenshots -->
+        <section>
+            <h2>Implementation Evidence</h2>
+
+            <div class="screenshot-container">
+                <h3>1. Successful SSO Authentication</h3>
+                <img src="../assets/images/salesforce/01-split-screen-azure-salesforce.png" alt="Azure AD and Salesforce Split Screen">
+                <p class="caption">
+                    <strong>Left:</strong> Azure AD sign-in logs showing multiple successful federated authentications<br>
+                    <strong>Right:</strong> Salesforce Developer Edition accessed via SSO without Salesforce credentials
+                </p>
+                <ul class="key-points">
+                    <li>User: nigel@nigeltech.onmicrosoft.com</li>
+                    <li>Application: Salesforce-SSO-Lab</li>
+                    <li>Status: Success (all authentication events)</li>
+                    <li>Authentication method: Federated (SAML)</li>
+                </ul>
+            </div>
+
+            <div class="screenshot-container">
+                <h3>2. Salesforce SAML Configuration</h3>
+                <img src="../assets/images/salesforce/02-salesforce-sso-config.png" alt="Salesforce SSO Configuration">
+                <p class="caption">Complete SAML Identity Provider configuration in Salesforce</p>
+                <ul class="key-points">
+                    <li><strong>SAML Identity Type:</strong> Assertion contains the Federation ID from the User object ⭐</li>
+                    <li><strong>SAML Identity Location:</strong> Identity is in the NameIdentifier element of the Subject statement</li>
+                    <li><strong>Certificate:</strong> X.509 certificate valid until February 2029</li>
+                    <li><strong>Request Signature Method:</strong> RSA-SHA256</li>
+                    <li><strong>Service Provider Binding:</strong> HTTP POST</li>
+                </ul>
+            </div>
+
+            <div class="screenshot-container">
+                <h3>3. Azure AD Claims Mapping</h3>
+                <img src="../assets/images/salesforce/03-azure-claims-mapping.png" alt="Azure AD Claims Configuration">
+                <p class="caption">Identity Provider claim configuration controlling user attributes sent in SAML assertion</p>
+                <div class="claims-info">
+                    <h4>Required Claim</h4>
+                    <ul>
+                        <li><strong>Unique User Identifier (Name ID):</strong> user.userprincipalname</li>
+                        <li>Sent as SAML NameIdentifier element</li>
+                        <li>Maps to Salesforce Federation ID field</li>
+                        <li>Format: Email address</li>
+                    </ul>
+                    <h4>Additional Claims</h4>
+                    <ul>
+                        <li><strong>emailaddress:</strong> user.mail</li>
+                        <li><strong>givenname:</strong> user.givenname</li>
+                        <li><strong>surname:</strong> user.surname</li>
+                        <li><strong>name:</strong> user.userprincipalname</li>
+                        <li><strong>username:</strong> user.userprincipalname (Salesforce requirement)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="screenshot-container">
+                <h3>4. Network Flow Analysis</h3>
+                <img src="../assets/images/salesforce/04-network-flow-filtered.png" alt="SAML Network Traffic">
+                <p class="caption">Browser DevTools showing filtered SAML traffic (4 requests from 365 total)</p>
+                <ol class="saml-flow">
+                    <li><strong>authn-request.jsp:</strong> Salesforce generates SAML AuthnRequest</li>
+                    <li><strong>saml2:</strong> Azure AD processes authentication request</li>
+                    <li><strong>saml2?sso_reload=true:</strong> SAML response processing</li>
+                    <li><strong>frontdoor.jsp?sid=...:</strong> Session established after token validation</li>
+                </ol>
+                <p><em>Total authentication time: ~12 seconds from initiation to access granted</em></p>
+            </div>
+        </section>
+
+        <!-- Troubleshooting Case Study -->
+        <section class="troubleshooting">
+            <h2>Troubleshooting Case Study</h2>
+
+            <div class="problem-box">
+                <h3>Problem</h3>
+                <p>SSO authentication failed with error: <em>"We can't log you in because of an issue with single sign-on"</em></p>
+            </div>
+
+            <h3>Initial Analysis</h3>
+            <ol>
+                <li>Verified Salesforce user was active ✓</li>
+                <li>Confirmed Federation ID matched SAML NameID exactly ✓</li>
+                <li>Enabled case-insensitive Federation ID matching ✓</li>
+                <li>Decoded SAML response - assertion structure was valid ✓</li>
+                <li>All claims were present and formatted correctly ✓</li>
+            </ol>
+
+            <h3>Root Cause Discovery</h3>
+            <p>Reviewed Salesforce SAML configuration and identified misconfiguration:</p>
+            
+            <div class="comparison">
+                <div class="incorrect">
+                    <h4>❌ Incorrect Setting</h4>
+                    <p><strong>SAML Identity Type:</strong> "Assertion contains the User ID from the User object"</p>
+                    <p><strong>Why This Failed:</strong></p>
+                    <ul>
+                        <li>Salesforce User ID is an 18-character alphanumeric internal identifier (e.g., 005xx000001X8Uz)</li>
+                        <li>Azure AD sent NameID in email format: Nigel@NigelTech.onmicrosoft.com</li>
+                        <li>Salesforce attempted to match email-formatted NameID against internal User ID field</li>
+                        <li>Match would never succeed due to incompatible formats</li>
+                    </ul>
+                </div>
+
+                <div class="correct">
+                    <h4>✅ Corrected Setting</h4>
+                    <p><strong>SAML Identity Type:</strong> "Assertion contains the Federation ID from the User object"</p>
+                    <p><strong>Why This Worked:</strong></p>
+                    <ul>
+                        <li>Federation ID field designed for external identity federation</li>
+                        <li>Accepts email-formatted identifiers from external IdPs</li>
+                        <li>Properly matches incoming SAML NameID to Salesforce user record</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="result-box">
+                <h3>Result</h3>
+                <p>Immediate SSO authentication success. All subsequent login attempts successful as evidenced by Azure AD sign-in logs.</p>
+            </div>
+
+            <div class="learning-box">
+                <h3>Key Learning</h3>
+                <p>Salesforce provides three different user identifier fields for SAML matching:</p>
+                <ol>
+                    <li><strong>User ID:</strong> Internal 18-character Salesforce record identifier (for Salesforce-to-Salesforce)</li>
+                    <li><strong>Username:</strong> Login username field (can work but not recommended for federation)</li>
+                    <li><strong>Federation ID:</strong> Specifically designed for external identity provider integration ✅</li>
+                </ol>
+                <p><em>Understanding which field to use for identity matching is critical for successful SSO troubleshooting.</em></p>
+            </div>
+        </section>
+
+        <!-- Security Features -->
+        <section>
+            <h2>Security Features</h2>
+
+            <h3>Authentication Security</h3>
+            <ul>
+                <li><strong>Certificate-based trust:</strong> X.509 digital certificate validates SAML assertions</li>
+                <li><strong>Signature validation:</strong> RSA-SHA256 algorithm prevents token forgery</li>
+                <li><strong>Audience restriction:</strong> SAML tokens restricted to specific Salesforce Entity ID</li>
+                <li><strong>Time-bound tokens:</strong> NotBefore and NotOnOrAfter conditions prevent replay attacks</li>
+                <li><strong>Secure binding:</strong> HTTP POST prevents token exposure in URLs</li>
+            </ul>
+
+            <h3>Audit and Compliance</h3>
+            <ul>
+                <li><strong>Azure AD sign-in logs:</strong> Complete audit trail of authentication events</li>
+                <li><strong>Salesforce login history:</strong> Service Provider maintains access logs</li>
+                <li><strong>Federation ID matching:</strong> Ensures correct user identity mapping</li>
+                <li><strong>Case-insensitive matching:</strong> Enabled for Federation ID field</li>
+            </ul>
+        </section>
+
+        <!-- SAML Protocol Flow -->
+        <section>
+            <h2>SAML Protocol Flow</h2>
+
+            <div class="protocol-steps">
+                <div class="step">
+                    <h4>Step 1: Service Provider Initiated SSO</h4>
+                    <p>User navigates to Salesforce and clicks "Azure_AD_SSO" button</p>
+                </div>
+
+                <div class="step">
+                    <h4>Step 2: SAML Authentication Request</h4>
+                    <p>Salesforce generates SAML AuthnRequest and redirects browser to Azure AD</p>
+                    <pre><code>&lt;samlp:AuthnRequest&gt;
+  &lt;saml:Issuer&gt;https://orgfarm-ce698c619e-dev-ed.develop.my.salesforce.com&lt;/saml:Issuer&gt;
+  &lt;samlp:NameIDPolicy Format="emailAddress"/&gt;
+&lt;/samlp:AuthnRequest&gt;</code></pre>
+                </div>
+
+                <div class="step">
+                    <h4>Step 3: User Authentication</h4>
+                    <p>User authenticates with Azure AD (credentials + MFA if required)</p>
+                </div>
+
+                <div class="step">
+                    <h4>Step 4: SAML Response</h4>
+                    <p>Azure AD generates signed SAML assertion and posts to Salesforce</p>
+                    <pre><code>&lt;samlp:Response&gt;
+  &lt;saml:Assertion&gt;
+    &lt;saml:Subject&gt;
+      &lt;saml:NameID&gt;Nigel@NigelTech.onmicrosoft.com&lt;/saml:NameID&gt;
+    &lt;/saml:Subject&gt;
+    &lt;saml:Conditions&gt;
+      &lt;saml:AudienceRestriction&gt;
+        &lt;saml:Audience&gt;https://orgfarm-ce698c619e-dev-ed...&lt;/saml:Audience&gt;
+      &lt;/saml:AudienceRestriction&gt;
+    &lt;/saml:Conditions&gt;
+    &lt;saml:AttributeStatement&gt;
+      &lt;saml:Attribute Name="username"&gt;
+        &lt;saml:AttributeValue&gt;Nigel@NigelTech.onmicrosoft.com&lt;/saml:AttributeValue&gt;
+      &lt;/saml:Attribute&gt;
+    &lt;/saml:AttributeStatement&gt;
+  &lt;/saml:Assertion&gt;
+&lt;/samlp:Response&gt;</code></pre>
+                </div>
+
+                <div class="step">
+                    <h4>Step 5: Token Validation</h4>
+                    <p>Salesforce validates:</p>
+                    <ul>
+                        <li>Digital signature using uploaded certificate</li>
+                        <li>Audience restriction matches Entity ID</li>
+                        <li>Token not expired (NotOnOrAfter timestamp)</li>
+                        <li>NameID matches user's Federation ID</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <h4>Step 6: Access Granted</h4>
+                    <p>Salesforce creates session and grants access</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Business Applications -->
+        <section>
+            <h2>Business Applications</h2>
+
+            <div class="use-case">
+                <h3>Law Firm Scenario (Greenberg Traurig)</h3>
+                <ul>
+                    <li>Attorneys access Salesforce case management system via Azure AD SSO</li>
+                    <li>Federation ID maps to bar numbers or employee IDs</li>
+                    <li>Eliminates separate Salesforce password management</li>
+                    <li>Conditional Access policies enforce MFA for client data access</li>
+                    <li>Centralized identity management reduces security risks</li>
+                </ul>
+            </div>
+
+            <div class="use-case">
+                <h3>Credit Union Scenario (Space Coast Credit Union)</h3>
+                <ul>
+                    <li>Employees access Salesforce CRM without separate credentials</li>
+                    <li>Federation ID maps to employee numbers in HR system</li>
+                    <li>Device compliance enforced before Salesforce access</li>
+                    <li>Single sign-out capability improves security</li>
+                    <li>Simplified onboarding/offboarding through centralized identity</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Skills Demonstrated -->
+        <section>
+            <h2>Skills Demonstrated</h2>
+
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Technical Skills</h3>
+                    <ul>
+                        <li>SAML 2.0 protocol implementation</li>
+                        <li>Identity federation architecture</li>
+                        <li>Digital certificate trust establishment</li>
+                        <li>User identity mapping strategies</li>
+                        <li>Browser-based network traffic analysis</li>
+                        <li>XML assertion structure analysis</li>
+                        <li>Enterprise application integration</li>
+                    </ul>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Troubleshooting Skills</h3>
+                    <ul>
+                        <li>Systematic problem diagnosis</li>
+                        <li>SAML assertion decoding and analysis</li>
+                        <li>Configuration validation across systems</li>
+                        <li>Identity field mapping troubleshooting</li>
+                        <li>Root cause analysis without escalation</li>
+                    </ul>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Security Skills</h3>
+                    <ul>
+                        <li>Certificate-based authentication</li>
+                        <li>Token signature validation</li>
+                        <li>Audience restriction enforcement</li>
+                        <li>Replay attack prevention</li>
+                        <li>Audit logging and compliance monitoring</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tools and Resources -->
+        <section>
+            <h2>Tools and Resources</h2>
+
+            <h3>Development Tools</h3>
+            <ul>
+                <li>Browser DevTools (Chrome/Edge) - Network traffic analysis</li>
+                <li>SAML Decoder (samltool.com) - Assertion analysis</li>
+                <li>Azure Portal - Identity Provider configuration</li>
+                <li>Salesforce Setup - Service Provider configuration</li>
+            </ul>
+
+            <h3>Documentation References</h3>
+            <ul>
+                <li><a href="https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/add-application-portal-setup-sso" target="_blank">Microsoft SAML SSO Documentation</a></li>
+                <li><a href="https://help.salesforce.com/s/articleView?id=sf.sso_saml.htm" target="_blank">Salesforce SAML SSO Implementation Guide</a></li>
+                <li><a href="http://docs.oasis-open.org/security/saml/Post2.0/sstc-saml-tech-overview-2.0.html" target="_blank">OASIS SAML 2.0 Technical Overview</a></li>
+            </ul>
+        </section>
+
+        <!-- Conclusion -->
+        <section>
+            <h2>Conclusion</h2>
+            <p>This project demonstrates end-to-end implementation of enterprise SAML-based Single Sign-On, including:</p>
+            <ul>
+                <li>Complete configuration of both Identity Provider and Service Provider</li>
+                <li>Understanding of SAML protocol flow and security mechanisms</li>
+                <li>Real-world troubleshooting of identity matching issues</li>
+                <li>Production-ready security controls (certificates, signatures, audience restrictions)</li>
+                <li>Audit logging and compliance considerations</li>
+            </ul>
+            <p>The troubleshooting experience with Federation ID vs User ID matching provides practical insight into common SSO configuration issues that IAM analysts encounter in production environments.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p><a href="../index.html">← Back to Portfolio</a></p>
+        <p>Last updated: January 2026</p>
+    </footer>
+</body>
+</html>
