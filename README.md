@@ -97,7 +97,7 @@ This portfolio documents my transition from Systems Administration into speciali
 
 ## 🏢 Professional Background
 
-- **Current Role:** Jr. Systems Administrator at HumanIT Solutions (Microsoft 365 GCC High environment)
+- **Current Role:** Jr. System Administrator at HumanIT Solutions (Microsoft 365 GCC High environment)
 - **Certifications:** CompTIA A+, CompTIA Security+
 - **Education:** B.S. Management Information Systems - Florida Atlantic University
 
